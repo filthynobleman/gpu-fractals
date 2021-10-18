@@ -14,6 +14,7 @@ In order to compile and run the application you need the following external libr
  - [GLFW](https://www.glfw.org/)
  - [STB Image](https://github.com/nothings/stb/blob/master/stb_image.h)
  - [STB Image Write](https://github.com/nothings/stb/blob/master/stb_image_write.h)
+ 
 The libraries must be put inside the `ext` folder in the project. As an alternative, you can change the `CMakeLists.txt` and direct it to the installation dir for the libraries.  
 
 ### Additional notes for STB
