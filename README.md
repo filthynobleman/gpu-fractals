@@ -5,7 +5,7 @@ The application in the repository can produce, at the moment, the following frac
  - Mandelbrot's set
  - Julia's set
 
-<img src="imgs/newton.png" width=200px><img src="imgs/mandelbrot.png" width=200px><img src="imgs/julia.png" width=200px>
+<img src="imgs/newton.png" width=250px><img src="imgs/mandelbrot.png" width=250px><img src="imgs/julia.png" width=250px>
 
 
 ## Requirements
