@@ -5,7 +5,7 @@ The application in the repository can produce, at the moment, the following frac
  - Mandelbrot's set
  - Julia's set
 
-<img src="imgs/newton.png" width=300px><img src="imgs/mandelbrot.png" width=300px><img src="imgs/julia.png" width=300px>
+<img src="imgs/newton.png" width=200px><img src="imgs/mandelbrot.png" width=200px><img src="imgs/julia.png" width=200px>
 
 
 ## Requirements
@@ -14,7 +14,7 @@ In order to compile and run the application you need the following external libr
  - [GLFW](https://www.glfw.org/)
  - [STB Image](https://github.com/nothings/stb/blob/master/stb_image.h)
  - [STB Image Write](https://github.com/nothings/stb/blob/master/stb_image_write.h)
- 
+
 The libraries must be put inside the `ext` folder in the project. As an alternative, you can change the `CMakeLists.txt` and direct it to the installation dir for the libraries.  
 
 ### Additional notes for STB
