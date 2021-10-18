@@ -1,0 +1,152 @@
+#version 440 core
+
+struct complex
+{
+    double real;
+    double imag;
+};
+
+struct ParamsStruct
+{
+    int niters;
+    int nroots;
+    double angle;
+    double xmax;
+    double xmin;
+    double ymax;
+    double ymin;
+};
+
+
+layout(local_size_x = 32, local_size_y = 32) in;
+layout(rgba32f, binding = 0)    uniform image2D Img;
+layout(std430, binding = 1)     readonly buffer ParamsBuf
+{
+    ParamsStruct Params;
+};
+layout(std430, binding = 2)     readonly buffer RootsBuf
+{
+    complex Roots[];
+};
+
+
+
+complex cconj(complex z)
+{
+    complex cz;
+    cz.real = z.real;
+    cz.imag = -z.imag;
+    return cz;
+}
+
+double cabs(complex z)
+{
+    return sqrt(z.real * z.real + z.imag * z.imag);
+}
+
+complex cadd(complex z1, complex z2)
+{
+    complex Z;
+    Z.real = z1.real + z2.real;
+    Z.imag = z1.imag + z2.imag;
+    return Z;
+}
+
+complex csub(complex z1, complex z2)
+{
+    complex Z;
+    Z.real = z1.real - z2.real;
+    Z.imag = z1.imag - z2.imag;
+    return Z;
+}
+
+complex cmul(complex z1, complex z2)
+{
+    complex Z;
+    Z.real = z1.real * z2.real - z1.imag * z2.imag;
+    Z.imag = z1.real * z2.imag + z1.imag * z2.real;
+    return Z;
+}
+
+complex cdiv(complex z1, complex z2)
+{
+    complex Z;
+    double den = z2.real * z2.real + z2.imag * z2.imag;
+    Z.real = (z1.real * z2.real + z1.imag * z2.imag) / den;
+    Z.imag = (z1.imag * z2.real - z1.real * z2.imag) / den;
+    return Z;
+}
+
+complex cexp(complex z)
+{
+    double ex = exp(float(z.real));
+    complex ez;
+    ez.real = ex * cos(float(z.imag));
+    ez.imag = ex * sin(float(z.imag));
+    return ez;
+}
+
+vec4 Colors[8] = {
+    vec4(0.2422,    0.1504,     0.6603,     1.0f),
+    vec4(0.2810,    0.3228,     0.9579,     1.0f),
+    vec4(0.1786,    0.5289,     0.9682,     1.0f),
+    vec4(0.0689,    0.6948,     0.8394,     1.0f),
+    vec4(0.2161,    0.7843,     0.5923,     1.0f),
+    vec4(0.6720,    0.7793,     0.2227,     1.0f),
+    vec4(0.9970,    0.7659,     0.2199,     1.0f),
+    vec4(0.9769,    0.9839,     0.0805,     1.0f)
+};
+
+vec4 colormap(int k)
+{
+    double Theta = double(k) / double(Params.niters);
+    int LeftIdx = int(floor(Theta * 8));
+    int RightIdx = int(ceil(Theta * 8));
+    if (LeftIdx == RightIdx)
+        return Colors[LeftIdx];
+    
+    double l1 = double(LeftIdx) / 8.0;
+    double l2 = double(RightIdx) / 8.0;
+    Theta = (Theta - l1) / (l2 - l1);
+    return Colors[LeftIdx] * float(1 - Theta) + Colors[RightIdx] * float(Theta);
+}
+
+
+void main()
+{
+    ivec2 Coords = ivec2(gl_GlobalInvocationID);
+    ivec2 Size = imageSize(Img);
+    if (Coords.x >= Size.x || Coords.y >= Size.y)
+        return;
+
+    double XLen = Params.xmax - Params.xmin;
+    double x = double(Coords.x) / double(Size.x);
+    x = x * XLen + Params.xmin;
+    double YLen = Params.ymax - Params.ymin;
+    double y = double(Coords.y) / double(Size.y);
+    y = y * YLen + Params.ymin;
+
+    complex z;
+    z.real = x;
+    z.imag = y;
+    complex c;
+    c.real = 0.7885;
+    c.imag = 0.0;
+    complex ia;
+    ia.real = 0.0;
+    ia.imag = Params.angle;
+    c = cmul(c, cexp(ia));
+    int k = 0;
+    for (int i = 0; i < Params.niters; ++i)
+    {
+        z = cadd(c, cmul(z, z));
+        if (cabs(z) > 2)
+        {
+            k = Params.niters - i;
+            break;
+        }
+    }
+    
+    vec4 Col = colormap(k);
+    imageStore(Img, Coords, Col);
+}

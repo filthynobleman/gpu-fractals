@@ -1,0 +1,19 @@
+/**
+ * @file        defines.hpp
+ * 
+ * @brief       This file is configured via CMake and provides to the application all the macros' values.
+ * 
+ * @author      Filippo Maggioli\n 
+ *              (maggioli@di.uniroma1.it, maggioli.filippo@gmail.com)\n 
+ *              Sapienza, University of Rome - Department of Computer Science
+ * @date        2021-10-18
+ */
+#pragma once
+
+#cmakedefine ENABLE_REPRODUCIBILITY
+
+#define TEX_SIZE                @CMAKE_TEX_SIZE@
+#define SHADERS_DIR             @SHADERS_DIR@
+#define NEWTON_SHADER           SHADERS_DIR "/newton.compute"
+#define MANDELBROT_SHADER       SHADERS_DIR "/mandelbrot.compute"
+#define JULIA_SHADER            SHADERS_DIR "/julia.compute"
