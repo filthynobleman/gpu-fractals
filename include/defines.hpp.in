@@ -10,10 +10,11 @@
  */
 #pragma once
 
-#cmakedefine ENABLE_REPRODUCIBILITY
-
-#define TEX_SIZE                @CMAKE_TEX_SIZE@
-#define SHADERS_DIR             @SHADERS_DIR@
-#define NEWTON_SHADER           SHADERS_DIR "/newton.compute"
-#define MANDELBROT_SHADER       SHADERS_DIR "/mandelbrot.compute"
-#define JULIA_SHADER            SHADERS_DIR "/julia.compute"
+#define TEX_SIZE                            @CMAKE_TEX_SIZE@
+#define SHADERS_DIR                         @SHADERS_DIR@
+#define NEWTON_COMPUTE_SHADER               SHADERS_DIR "/newton.compute"
+#define MANDELBROT_COMPUTE_SHADER           SHADERS_DIR "/mandelbrot.compute"
+#define JULIA_COMPUTE_SHADER                SHADERS_DIR "/julia.compute"
+#define NEWTON_FRAGMENT_SHADER              SHADERS_DIR "/newton.frag"
+#define MANDELBROT_FRAGMENT_SHADER          SHADERS_DIR "/mandelbrot.frag"
+#define JULIA_FRAGMENT_SHADER               SHADERS_DIR "/julia.frag"

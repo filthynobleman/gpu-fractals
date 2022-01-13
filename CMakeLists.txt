@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0)
 project(GPUFractals LANGUAGES C CXX)
 
-
-option(ENABLE_REPRODUCIBILITY "Decide to always have the same random values or change them at every run." ON)
 if (TEX_SIZE)
     set(CMAKE_TEX_SIZE ${TEX_SIZE})
 else()
@@ -11,19 +9,27 @@ endif()
 set(SHADERS_DIR "\"${CMAKE_BINARY_DIR}/shaders\"")
 
 
-# Include GLFW
-list(APPEND CMAKE_PREFIX_PATH "ext/GLFW")
-find_package(glfw3 3.3 REQUIRED)
-include_directories("ext/GLFW/include")
+# Include GLAD. Allow for other implementations
+if (NOT DEFINED GLAD_HOME)
+    set(GLAD_HOME "ext/GLAD")
+endif()
+include_directories("${GLAD_HOME}/include")
+add_library(GLAD STATIC "${GLAD_HOME}/src/glad.c")
+
+# Include GLFW3. Allow for other implementations
+if (NOT DEFINED GLFW3_HOME)
+    set(GLFW3_HOME "ext/GLFW")
+endif()
+set(glfw3_DIR "${GLFW3_HOME}/lib/cmake/glfw3")
+find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-# Include GLAD
-include_directories("ext/GLAD/include")
-add_library(GLAD STATIC "ext/GLAD/src/glad.c")
-
-# Include STB
-include_directories("ext/STB")
-add_library(STB STATIC "ext/STB/stb_implementation.c")
+# Include STB. Allow for other implementations
+if (NOT DEFINED STB_HOME)
+    set(STB_HOME "ext/STB")
+endif()
+include_directories("${STB_HOME}/include")
+add_library(STB STATIC "${STB_HOME}/stb_implementation.c")
 
 # Create the executable
 include_directories("${CMAKE_SOURCE_DIR}/include")

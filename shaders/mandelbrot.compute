@@ -11,10 +11,10 @@ struct ParamsStruct
     int niters;
     int nroots;
     double angle;
-    double xmax;
     double xmin;
-    double ymax;
+    double xmax;
     double ymin;
+    double ymax;
 };
 
 
